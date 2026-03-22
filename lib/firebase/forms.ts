@@ -9,6 +9,7 @@ import {
   deleteDoc,
   serverTimestamp,
   addDoc,
+  Timestamp,
 } from "firebase/firestore";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth, db } from "./firebase";
@@ -70,6 +71,10 @@ export async function fetchDashboardForms(uid: string): Promise<{
   try {
     const userDoc = await getDoc(doc(db, "users", uid));
     const isUserAdmin = userDoc.exists() && userDoc.data().isAdmin === true;
+    const getMillis = (t: unknown) => {
+      if (t instanceof Timestamp) return t.toMillis();
+      return 0;
+    };
 
     let fetchedForms;
     if (isUserAdmin) {
@@ -80,8 +85,8 @@ export async function fetchDashboardForms(uid: string): Promise<{
 
     fetchedForms = fetchedForms.filter((f) => !f.deletedAt);
     fetchedForms.sort((a, b) => {
-      const timeA = a.updatedAt?.toMillis?.() || 0;
-      const timeB = b.updatedAt?.toMillis?.() || 0;
+      const timeA = getMillis(a.updatedAt);
+      const timeB = getMillis(b.updatedAt);
       return timeB - timeA;
     });
 
@@ -151,7 +156,7 @@ export async function loadFormForSubmission(
       return { form: null, error: "Form is not available" };
     }
 
-    if (formData.deadline && new Date() > new Date(formData.deadline)) {
+    if (formData.deadline && new Date() > formData.deadline.toDate()) {
       return {
         form: null,
         error:

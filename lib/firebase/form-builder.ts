@@ -28,8 +28,8 @@ export interface Form {
   submitMessage?: string;
   allowMultipleResponses?: boolean;
   deadline: Timestamp; // not string
-  createdAt: FieldValue;
-  updatedAt: FieldValue;
+  createdAt: Timestamp | FieldValue;
+  updatedAt: Timestamp | FieldValue;
   deletedAt: Timestamp | null;
 }
 const deadlineDate = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
