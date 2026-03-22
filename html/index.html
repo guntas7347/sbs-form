@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SBSSU Forms - Home</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface-variant": "#5a4138",
+              "outline": "#8e7166",
+              "error-container": "#ffdad6",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed": "#370e00",
+              "surface-container-highest": "#e0e3e5",
+              "primary": "#a33900",
+              "surface-container": "#eceef0",
+              "on-surface": "#191c1e",
+              "tertiary-fixed-dim": "#a4c9ff",
+              "on-secondary-fixed-variant": "#005320",
+              "background": "#f7f9fb",
+              "tertiary-fixed": "#d4e3ff",
+              "on-background": "#191c1e",
+              "secondary-fixed-dim": "#62df7d",
+              "on-error-container": "#93000a",
+              "secondary-container": "#7cf994",
+              "inverse-on-surface": "#eff1f3",
+              "on-error": "#ffffff",
+              "surface-bright": "#f7f9fb",
+              "primary-container": "#cc4900",
+              "primary-fixed-dim": "#ffb599",
+              "primary-fixed": "#ffdbce",
+              "surface-variant": "#e0e3e5",
+              "on-tertiary-container": "#fdfcff",
+              "on-secondary": "#ffffff",
+              "on-tertiary-fixed-variant": "#004883",
+              "secondary-fixed": "#7ffc97",
+              "surface-tint": "#a73a00",
+              "outline-variant": "#e2bfb2",
+              "secondary": "#006e2d",
+              "on-primary-container": "#fffbff",
+              "surface-dim": "#d8dadc",
+              "inverse-surface": "#2d3133",
+              "tertiary-container": "#0076d2",
+              "surface": "#f7f9fb",
+              "surface-container-low": "#f2f4f6",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#007230",
+              "on-secondary-fixed": "#002109",
+              "tertiary": "#005da8",
+              "on-tertiary-fixed": "#001c39",
+              "on-primary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#e6e8ea",
+              "on-primary-fixed-variant": "#7f2b00",
+              "inverse-primary": "#ffb599"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .editorial-title {
+            font-family: 'Manrope', sans-serif;
+            letter-spacing: -0.02em;
+        }
+        .signature-gradient {
+            background: linear-gradient(135deg, #a33900 0%, #cc4900 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-orange-600 text-2xl" data-icon="account_balance">account_balance</span>
+<span class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 font-headline">SBSSU Forms</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-orange-600 dark:text-orange-500 font-semibold font-body text-sm" href="#">Home</a>
+<a class="text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded-lg font-body text-sm" href="#">Explore</a>
+<a class="text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded-lg font-body text-sm" href="#">My Submissions</a>
+</div>
+<button class="px-6 py-2 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-800 active:scale-95 duration-150 transition-all text-sm">
+                Login
+            </button>
+</div>
+</nav>
+<main class="pt-32 pb-20">
+<!-- Hero & Search Section -->
+<section class="max-w-4xl mx-auto px-6 text-center mb-24">
+<h1 class="editorial-title text-5xl md:text-6xl font-extrabold text-on-surface mb-6">
+                The Academic <span class="text-primary">Gallery</span>
+</h1>
+<p class="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto mb-12 font-body leading-relaxed">
+                Access official university documentation, scholarship applications, and administrative forms in one streamlined curator.
+            </p>
+<!-- Centered Search Bar -->
+<div class="relative max-w-2xl mx-auto group">
+<div class="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="search">search</span>
+</div>
+<input class="w-full pl-14 pr-6 py-5 bg-surface-container-lowest rounded-full border-none shadow-[0_20px_40px_rgba(25,28,30,0.06)] focus:ring-2 focus:ring-primary/20 transition-all text-on-surface placeholder:text-on-surface-variant/50 text-lg" placeholder="Search forms..." type="text"/>
+</div>
+</section>
+<!-- Latest Forms Section -->
+<section class="max-w-7xl mx-auto px-6">
+<div class="flex items-end justify-between mb-10">
+<div>
+<span class="text-xs font-bold tracking-widest text-primary uppercase font-label mb-2 block">Available Now</span>
+<h2 class="editorial-title text-3xl font-bold text-on-surface">Latest Forms</h2>
+</div>
+<a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2 font-medium text-sm" href="#">
+                    View all artifacts
+                    <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<!-- Bento-ish Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Form Card 1 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="school">school</span>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full font-label">Open</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-3">Scholarship Application 2024</h3>
+<p class="text-on-surface-variant text-sm font-body leading-relaxed mb-8">
+                        Annual merit-based scholarship for undergraduate students in the Engineering department.
+                    </p>
+<button class="w-full py-3 signature-gradient text-white font-bold rounded-xl active:scale-95 transition-all text-sm">
+                        Open Artifact
+                    </button>
+</div>
+<!-- Form Card 2 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="description">description</span>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full font-label">Open</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-3">Hostel Re-allocation Form</h3>
+<p class="text-on-surface-variant text-sm font-body leading-relaxed mb-8">
+                        Request for change in room assignment or hostel wing for the upcoming semester.
+                    </p>
+<button class="w-full py-3 signature-gradient text-white font-bold rounded-xl active:scale-95 transition-all text-sm">
+                        Open Artifact
+                    </button>
+</div>
+<!-- Form Card 3 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-12 h-12 rounded-lg bg-tertiary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" data-icon="verified_user">verified_user</span>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full font-label">Open</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-3">No Dues Certificate</h3>
+<p class="text-on-surface-variant text-sm font-body leading-relaxed mb-8">
+                        Clearance form required for graduating students from library and lab departments.
+                    </p>
+<button class="w-full py-3 signature-gradient text-white font-bold rounded-xl active:scale-95 transition-all text-sm">
+                        Open Artifact
+                    </button>
+</div>
+<!-- Form Card 4 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-12 h-12 rounded-lg bg-on-surface-variant/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="history_edu">history_edu</span>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full font-label">Open</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-3">Transcript Request</h3>
+<p class="text-on-surface-variant text-sm font-body leading-relaxed mb-8">
+                        Official academic record request for further studies or job applications.
+                    </p>
+<button class="w-full py-3 signature-gradient text-white font-bold rounded-xl active:scale-95 transition-all text-sm">
+                        Open Artifact
+                    </button>
+</div>
+<!-- Form Card 5 -->
+<div class="bg-surface-container-lowest p-8 rounded-xl transition-all hover:-translate-y-1">
+<div class="flex justify-between items-start mb-6">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="directions_bus">directions_bus</span>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-wider rounded-full font-label">Open</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-3">Bus Pass Renewal</h3>
+<p class="text-on-surface-variant text-sm font-body leading-relaxed mb-8">
+                        Quarterly renewal form for university transport services for local students.
+                    </p>
+<button class="w-full py-3 signature-gradient text-white font-bold rounded-xl active:scale-95 transition-all text-sm">
+                        Open Artifact
+                    </button>
+</div>
+<!-- Form Card 6 (Promotional/Feature Card) -->
+<div class="signature-gradient p-8 rounded-xl flex flex-col justify-between text-white">
+<div>
+<span class="text-[10px] font-bold uppercase tracking-widest mb-4 block opacity-80">University Portal</span>
+<h3 class="font-headline text-2xl font-extrabold mb-4 leading-tight">Need a custom department form?</h3>
+<p class="text-sm opacity-90 font-body leading-relaxed mb-6">
+                            Contact the administrative cell to digitize your department's workflow artifacts.
+                        </p>
+</div>
+<button class="w-full py-3 bg-white text-primary font-bold rounded-xl hover:bg-surface-bright transition-colors text-sm">
+                        Contact Support
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 py-12">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto gap-8">
+<div class="text-center md:text-left">
+<div class="text-lg font-bold text-slate-800 dark:text-slate-200 font-headline mb-2">SBSSU Forms</div>
+<p class="text-slate-500 dark:text-slate-500 text-sm font-body">© 2024 Shaheed Bhagat Singh State University. All rights reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6 md:gap-10">
+<a class="text-slate-500 dark:text-slate-500 hover:text-orange-600 dark:hover:text-orange-400 transition-all text-[0.75rem] font-label uppercase tracking-wider" href="#">Privacy Policy</a>
+<a class="text-slate-500 dark:text-slate-500 hover:text-orange-600 dark:hover:text-orange-400 transition-all text-[0.75rem] font-label uppercase tracking-wider" href="#">Terms of Service</a>
+<a class="text-slate-500 dark:text-slate-500 hover:text-orange-600 dark:hover:text-orange-400 transition-all text-[0.75rem] font-label uppercase tracking-wider font-bold underline text-orange-600" href="#">Support</a>
+<a class="text-slate-500 dark:text-slate-500 hover:text-orange-600 dark:hover:text-orange-400 transition-all text-[0.75rem] font-label uppercase tracking-wider" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+</body></html>
