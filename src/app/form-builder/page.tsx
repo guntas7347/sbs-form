@@ -7,14 +7,11 @@ import {
   type FormField,
   type FieldType,
 } from "../../../lib/firebase/form-builder";
-import {
-  subscribeToAuth,
-  getCurrentUser,
-  getFormById,
-} from "../../../lib/firebase/forms";
+import { subscribeToAuth, getCurrentUser } from "../../../lib/firebase/auth";
 import Header from "../../components/Header";
 import { MoveUp, MoveDown } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
+import { getFormById } from "../../../lib/firebase/forms";
 
 const FieldOptions = ({
   options,

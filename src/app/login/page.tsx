@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Info } from "lucide-react";
-import { subscribeToAuth } from "../../../lib/firebase/forms";
-import { signInWithGoogle } from "../../../lib/firebase/auth";
+import { signInWithGoogle, subscribeToAuth } from "../../../lib/firebase/auth";
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();

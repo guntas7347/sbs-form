@@ -1,6 +1,15 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "./firebase";
+import { onAuthStateChanged, type User } from "firebase/auth";
+
+export const subscribeToAuth = (callback: (user: User | null) => void) => {
+  return onAuthStateChanged(auth, callback);
+};
+
+export const getCurrentUser = () => {
+  return auth.currentUser;
+};
 
 export const signInWithGoogle = async () => {
   const provider = new GoogleAuthProvider();

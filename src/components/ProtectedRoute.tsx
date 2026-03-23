@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { subscribeToAuth } from "../../lib/firebase/forms";
 import { Loader2 } from "lucide-react";
 import type { User } from "firebase/auth";
+import { subscribeToAuth } from "../../lib/firebase/auth";
 
 export default function ProtectedRoute() {
   const [user, setUser] = useState<User | null>(null);

@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { type Form } from "../../../lib/firebase/form-builder";
+import { getCurrentUser, subscribeToAuth } from "../../../lib/firebase/auth";
+import type { User } from "firebase/auth";
 import {
-  subscribeToAuth,
   loadFormForSubmission,
   submitFormResponse,
-  getCurrentUser,
-} from "../../../lib/firebase/forms";
-import type { User } from "firebase/auth";
+} from "../../../lib/firebase/form-light";
 
 export default function FormPage() {
   const { formId } = useParams();

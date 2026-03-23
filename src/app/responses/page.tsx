@@ -3,12 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { Loader2, Download, Table as TableIcon } from "lucide-react";
 import { type Form } from "../../../lib/firebase/form-builder";
-import {
-  subscribeToAuth,
-  loadFormResponses,
-} from "../../../lib/firebase/forms";
+import { loadFormResponses } from "../../../lib/firebase/forms";
 import Header from "../../components/Header";
 import type { User } from "firebase/auth";
+import { subscribeToAuth } from "../../../lib/firebase/auth";
 
 export default function ResponsesPage() {
   const { formId } = useParams();

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { subscribeToAuth, checkIsAdmin } from "../../../lib/firebase/forms";
+import { checkIsAdmin } from "../../../lib/firebase/forms";
 import Header from "../../components/Header";
 import AdminDashboard from "../../components/dashboard/AdminDashboard";
 import UserDashboard from "../../components/dashboard/UserDashboard";
+import { subscribeToAuth } from "../../../lib/firebase/auth";
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);

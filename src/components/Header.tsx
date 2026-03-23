@@ -1,10 +1,10 @@
 import { LogOut, ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
-import { subscribeToAuth } from "../../lib/firebase/forms";
 import { signOut, type User } from "firebase/auth";
 import { Link, useLocation } from "react-router-dom";
 import { auth, db } from "../../lib/firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { subscribeToAuth } from "../../lib/firebase/auth";
 
 const Header = ({ setLoading }: { setLoading: (loading: boolean) => void }) => {
   const [user, setUser] = useState<User | null>(null);
