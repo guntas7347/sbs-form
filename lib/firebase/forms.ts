@@ -9,7 +9,10 @@ import {
   deleteDoc,
   serverTimestamp,
   addDoc,
-  Timestamp,
+  orderBy,
+  limit,
+  startAfter,
+  getCountFromServer,
 } from "firebase/firestore";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth, db } from "./firebase";
@@ -64,61 +67,13 @@ export const deleteFormById = async (formId: string) => {
   await deleteDoc(docRef);
 };
 
-export async function fetchDashboardForms(uid: string): Promise<{
-  forms: (Form & { id: string; ownerEmail?: string })[];
-  isAdmin: boolean;
-}> {
+export async function checkIsAdmin(uid: string): Promise<boolean> {
   try {
     const userDoc = await getDoc(doc(db, "users", uid));
-    const isUserAdmin = userDoc.exists() && userDoc.data().isAdmin === true;
-    const getMillis = (t: unknown) => {
-      if (t instanceof Timestamp) return t.toMillis();
-      return 0;
-    };
-
-    let fetchedForms;
-    if (isUserAdmin) {
-      fetchedForms = await getAllForms();
-    } else {
-      fetchedForms = await getUserForms(uid);
-    }
-
-    fetchedForms = fetchedForms.filter((f) => !f.deletedAt);
-    fetchedForms.sort((a, b) => {
-      const timeA = getMillis(a.updatedAt);
-      const timeB = getMillis(b.updatedAt);
-      return timeB - timeA;
-    });
-
-    if (isUserAdmin) {
-      const uniqueOwnerIds = [
-        ...new Set(fetchedForms.map((f) => f.ownerId).filter(Boolean)),
-      ];
-      const emailsMap: Record<string, string> = {};
-
-      await Promise.all(
-        uniqueOwnerIds.map(async (ownerId) => {
-          try {
-            const ownerDoc = await getDoc(doc(db, "users", ownerId));
-            if (ownerDoc.exists()) {
-              emailsMap[ownerId] = ownerDoc.data().email || "Unknown";
-            }
-          } catch (err) {
-            emailsMap[ownerId] = "Unknown";
-          }
-        }),
-      );
-
-      fetchedForms = fetchedForms.map((f) => ({
-        ...f,
-        ownerEmail: f.ownerId ? emailsMap[f.ownerId] || "Unknown" : "Unknown",
-      }));
-    }
-
-    return { forms: fetchedForms, isAdmin: isUserAdmin };
+    return userDoc.exists() && userDoc.data().isAdmin === true;
   } catch (error) {
-    console.error("Error fetching dashboard forms:", error);
-    throw error;
+    console.error("Error checking admin status:", error);
+    return false;
   }
 }
 
@@ -134,6 +89,144 @@ export async function deleteDashboardForm(
     }
   } catch (error) {
     console.error("Error deleting form:", error);
+    throw error;
+  }
+}
+
+export async function fetchUserFormsPaginated(
+  uid: string,
+  pageSize: number,
+  lastDocSnap: any = null,
+): Promise<{ forms: any[]; lastVisible: any; totalCount: number }> {
+  try {
+    const baseQ = query(
+      collection(db, "forms"),
+      where("ownerId", "==", uid),
+      where("deletedAt", "==", null),
+    );
+
+    const countSnap = await getCountFromServer(baseQ);
+    const totalCount = countSnap.data().count;
+
+    let formQ = query(baseQ, orderBy("updatedAt", "desc"), limit(pageSize));
+    if (lastDocSnap) {
+      formQ = query(
+        baseQ,
+        orderBy("updatedAt", "desc"),
+        startAfter(lastDocSnap),
+        limit(pageSize),
+      );
+    }
+
+    const querySnapshot = await getDocs(formQ);
+    const forms: any[] = [];
+    querySnapshot.forEach((docSnap) => {
+      forms.push({ id: docSnap.id, ...docSnap.data() });
+    });
+
+    const lastVisible =
+      querySnapshot.docs.length > 0
+        ? querySnapshot.docs[querySnapshot.docs.length - 1]
+        : null;
+
+    return { forms, lastVisible, totalCount };
+  } catch (error) {
+    console.error("Error fetching user forms:", error);
+    throw error;
+  }
+}
+
+export async function fetchAdminFormsPaginated(
+  pageSize: number,
+  lastDocSnap: any = null,
+): Promise<{ forms: any[]; lastVisible: any; totalCount: number }> {
+  try {
+    const baseQ = query(
+      collection(db, "forms"),
+      where("deletedAt", "==", null),
+    );
+
+    const countSnap = await getCountFromServer(baseQ);
+    const totalCount = countSnap.data().count;
+
+    let formQ = query(baseQ, orderBy("updatedAt", "desc"), limit(pageSize));
+    if (lastDocSnap) {
+      formQ = query(
+        baseQ,
+        orderBy("updatedAt", "desc"),
+        startAfter(lastDocSnap),
+        limit(pageSize),
+      );
+    }
+
+    const querySnapshot = await getDocs(formQ);
+    const forms: any[] = [];
+    querySnapshot.forEach((docSnap) => {
+      forms.push({ id: docSnap.id, ...docSnap.data() });
+    });
+
+    const lastVisible =
+      querySnapshot.docs.length > 0
+        ? querySnapshot.docs[querySnapshot.docs.length - 1]
+        : null;
+
+    return {
+      forms: forms.map((f: any) => ({
+        ...f,
+        ownerEmail: f.ownerEmail || "Unknown",
+      })),
+      lastVisible,
+      totalCount,
+    };
+  } catch (error) {
+    console.error("Error fetching admin forms:", error);
+    throw error;
+  }
+}
+
+export async function fetchAdminUsersPaginated(
+  searchEmailPrefix: string,
+  pageSize: number,
+  lastDocSnap: any = null,
+): Promise<{ users: any[]; lastVisible: any; totalCount: number }> {
+  try {
+    let baseQ = collection(db, "users") as any;
+
+    if (searchEmailPrefix) {
+      baseQ = query(
+        baseQ,
+        where("email", ">=", searchEmailPrefix),
+        where("email", "<=", searchEmailPrefix + "\uf8ff"),
+      );
+    }
+
+    const countSnap = await getCountFromServer(baseQ);
+    const totalCount = countSnap.data().count;
+
+    let userQ = query(baseQ, orderBy("email", "asc"), limit(pageSize));
+    if (lastDocSnap) {
+      userQ = query(
+        baseQ,
+        orderBy("email", "asc"),
+        startAfter(lastDocSnap),
+        limit(pageSize),
+      );
+    }
+
+    const querySnapshot = await getDocs(userQ);
+    const users: any[] = [];
+    querySnapshot.forEach((docSnap) => {
+      users.push({ id: docSnap.id, ...(docSnap.data() as any) });
+    });
+
+    const lastVisible =
+      querySnapshot.docs.length > 0
+        ? querySnapshot.docs[querySnapshot.docs.length - 1]
+        : null;
+
+    return { users, lastVisible, totalCount };
+  } catch (error) {
+    console.error("Error fetching admin users:", error);
     throw error;
   }
 }

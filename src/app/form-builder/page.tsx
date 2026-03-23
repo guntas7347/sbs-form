@@ -89,7 +89,13 @@ const FieldItem = ({
           type="text"
           value={field.label}
           onChange={(e) => updateField({ ...field, label: e.target.value })}
-          placeholder="Question"
+          placeholder={
+            ["text box", "html"].includes(field.type)
+              ? "Title (Optional)"
+              : field.type === "image"
+                ? "Image Alt Text / Title"
+                : "Question"
+          }
           className="font-medium text-base bg-gray-50 border-b border-gray-300 focus:border-blue-600 focus:bg-gray-100 p-3 flex-1 rounded-t transition-colors"
         />
         <select
@@ -98,7 +104,14 @@ const FieldItem = ({
             updateField({
               ...field,
               type: e.target.value as FieldType,
-              options: ["text", "paragraph"].includes(e.target.value)
+              options: [
+                "text",
+                "paragraph",
+                "number",
+                "text box",
+                "image",
+                "html",
+              ].includes(e.target.value)
                 ? []
                 : field.options?.length
                   ? field.options
@@ -112,6 +125,10 @@ const FieldItem = ({
           <option value="mcq">Multiple choice</option>
           <option value="checkbox">Checkboxes</option>
           <option value="dropdown">Dropdown</option>
+          <option value="number">Number</option>
+          <option value="text box">Text Box (Read Only)</option>
+          <option value="image">Image (Read Only)</option>
+          <option value="html">HTML (Read Only)</option>
         </select>
       </div>
 
@@ -121,6 +138,14 @@ const FieldItem = ({
             disabled
             type="text"
             placeholder="Short answer text"
+            className="border-b border-gray-300 border-dotted w-1/2 p-2 bg-transparent text-gray-400 text-sm"
+          />
+        )}
+        {field.type === "number" && (
+          <input
+            disabled
+            type="number"
+            placeholder="Number answer"
             className="border-b border-gray-300 border-dotted w-1/2 p-2 bg-transparent text-gray-400 text-sm"
           />
         )}
@@ -137,6 +162,37 @@ const FieldItem = ({
             options={field.options || []}
             onChange={(options) => updateField({ ...field, options })}
           />
+        )}
+        {field.type === "text box" && (
+          <textarea
+            value={field.content || ""}
+            onChange={(e) => updateField({ ...field, content: e.target.value })}
+            placeholder="Enter read-only text to display..."
+            className="border border-gray-300 rounded w-full p-2 text-sm bg-transparent"
+            rows={3}
+          />
+        )}
+        {field.type === "html" && (
+          <textarea
+            value={field.content || ""}
+            onChange={(e) => updateField({ ...field, content: e.target.value })}
+            placeholder="Enter HTML (with Tailwind classes)..."
+            className="border border-gray-300 rounded w-full p-2 text-sm bg-transparent font-mono"
+            rows={3}
+          />
+        )}
+        {field.type === "image" && (
+          <div className="flex flex-col gap-2">
+            <input
+              type="text"
+              value={field.content || ""}
+              onChange={(e) =>
+                updateField({ ...field, content: e.target.value })
+              }
+              placeholder="Image URL"
+              className="border-b border-gray-300 focus:border-blue-600 focus:outline-none p-2 w-full text-sm bg-transparent"
+            />
+          </div>
         )}
       </div>
 
@@ -162,18 +218,22 @@ const FieldItem = ({
           )}
         </div>
         <div className="flex justify-end gap-6 items-center">
-          <label className="flex items-center gap-2 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={field.required}
-              onChange={(e) =>
-                updateField({ ...field, required: e.target.checked })
-              }
-              className="w-4 h-4 text-blue-600 rounded border-gray-300"
-            />
-            <span className="font-medium text-gray-700">Required</span>
-          </label>
-          <div className="w-[1px] h-6 bg-gray-200"></div>
+          {!["text box", "image", "html"].includes(field.type) && (
+            <>
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={field.required}
+                  onChange={(e) =>
+                    updateField({ ...field, required: e.target.checked })
+                  }
+                  className="w-4 h-4 text-blue-600 rounded border-gray-300"
+                />
+                <span className="font-medium text-gray-700">Required</span>
+              </label>
+              <div className="w-[1px] h-6 bg-gray-200"></div>
+            </>
+          )}
           <button
             onClick={removeField}
             className="text-gray-500 hover:text-red-600 hover:bg-red-50 p-2 rounded transition-colors"
@@ -238,7 +298,11 @@ export default function FormBuilderPage() {
         if (existingForm) {
           setForm(existingForm);
         } else {
-          const newForm = await createFormWithId(formId, user.uid);
+          const newForm = await createFormWithId(
+            formId,
+            user.uid,
+            user.email || "",
+          );
           setForm(newForm);
         }
       } catch (err) {

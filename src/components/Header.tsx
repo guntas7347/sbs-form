@@ -9,6 +9,7 @@ import { doc, getDoc } from "firebase/firestore";
 const Header = ({ setLoading }: { setLoading: (loading: boolean) => void }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const location = useLocation();
   const showBack =
     location.pathname !== "/dashboard" && location.pathname !== "/";
@@ -37,7 +38,15 @@ const Header = ({ setLoading }: { setLoading: (loading: boolean) => void }) => {
       await signOut(auth);
     }
   };
-
+  const getInitials = (name?: string) => {
+    if (!name) return "?";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+  };
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-outline-variant/30">
       <div className="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
@@ -63,11 +72,19 @@ const Header = ({ setLoading }: { setLoading: (loading: boolean) => void }) => {
         </div>
         <div className="flex items-center gap-4">
           <div className="hidden sm:flex items-center gap-3 mr-4">
-            <img
-              src={user?.photoURL || "https://via.placeholder.com/150"}
-              alt="Profile"
-              className="w-10 h-10 rounded-full border-2 border-primary/20 bg-primary/5"
-            />
+            {user?.photoURL && !imgError ? (
+              <img
+                src={user.photoURL}
+                alt="Profile"
+                onError={() => setImgError(true)}
+                className="w-10 h-10 rounded-full border-2 border-primary/20 bg-primary/5 object-cover"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full border-2 border-primary/20 bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
+                {getInitials(user?.displayName || "")}
+              </div>
+            )}
+
             <div className="flex flex-col">
               <span className="text-sm font-bold font-headline leading-none mb-1 flex items-center gap-2">
                 {user?.displayName}

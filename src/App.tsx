@@ -1,7 +1,6 @@
 import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import Page from "./app/page";
 import LoginPage from "./app/login/page";
 import FormPage from "./app/form/page";
 import NotFoundPage from "./app/not-found/page";
@@ -11,6 +10,8 @@ import Footer from "./components/Footer";
 const DashboardPage = lazy(() => import("./app/dashboard/page"));
 const FormBuilderPage = lazy(() => import("./app/form-builder/page"));
 const ResponsesPage = lazy(() => import("./app/responses/page"));
+const HomePage = lazy(() => import("./app/page"));
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -24,7 +25,7 @@ const App = () => {
         >
           <div className="flex-1 flex flex-col [&>*]:flex-1 w-full">
             <Routes>
-              <Route path="/" element={<Page />} />
+              <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
 
               <Route element={<ProtectedRoute />}>
