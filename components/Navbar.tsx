@@ -13,6 +13,10 @@ interface NavbarProps {
     id: string;
     name: string;
     email: string;
+    role?: string | null;
+    photo?: string | null;
+    degree?: string | null;
+    specialization?: string | null;
   } | null;
 }
 
@@ -40,13 +44,26 @@ export function Navbar({ user }: NavbarProps) {
         <div className="flex items-center gap-3">
           {user ? (
             <div className="flex items-center gap-3">
-              <div className="hidden sm:flex items-center gap-2 pl-3 py-1 pr-3 rounded-full bg-stone-50 dark:bg-stone-900 border border-stone-200/60 dark:border-stone-800 text-xs">
-                <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-orange-400 to-emerald-400 flex items-center justify-center text-white font-bold text-[10px]">
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
+              <div className="hidden sm:flex items-center gap-2 pl-2 py-1 pr-3 rounded-full bg-stone-50 dark:bg-stone-900 border border-stone-200/60 dark:border-stone-800 text-xs">
+                {user.photo ? (
+                  <img
+                    src={user.photo}
+                    alt={user.name}
+                    className="w-5 h-5 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-orange-400 to-emerald-400 flex items-center justify-center text-white font-bold text-[10px]">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <span className="font-medium text-stone-700 dark:text-stone-300">
                   {user.name}
                 </span>
+                {user.role === "admin" && (
+                  <span className="px-1.5 py-0.2 rounded-md text-[9px] font-bold uppercase tracking-wider bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 border border-orange-300/40">
+                    Admin
+                  </span>
+                )}
               </div>
 
               <ThemeToggle />

@@ -12,9 +12,16 @@ import { nanoid } from "nanoid";
 
 export const users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
+  username: varchar("username", { length: 255 }),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
-  department: varchar("department", { length: 255 }),
+  fatherName: varchar("father_name", { length: 255 }),
+  degree: varchar("degree", { length: 255 }),
+  specialization: varchar("specialization", { length: 255 }),
+  mobile: varchar("mobile", { length: 50 }),
+  role: varchar("role", { length: 50 }).notNull().default("student"),
+  isBanned: boolean("is_banned").notNull().default(false),
+  photo: text("photo"),
 });
 
 export const forms = pgTable("forms", {

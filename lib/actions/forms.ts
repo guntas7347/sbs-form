@@ -20,7 +20,12 @@ export interface FormCreatorInfo {
   id: string;
   name: string;
   email: string;
-  department: string | null;
+  username: string | null;
+  degree: string | null;
+  specialization: string | null;
+  mobile: string | null;
+  role: string | null;
+  photo: string | null;
 }
 
 export interface FormResponse {
@@ -82,7 +87,12 @@ export async function createForm(initialData?: {
         id: user.id,
         name: user.name,
         email: user.email,
-        department: null,
+        username: user.username || null,
+        degree: user.degree || null,
+        specialization: user.specialization || null,
+        mobile: user.mobile || null,
+        role: user.role || null,
+        photo: user.photo || null,
       },
       isOwner: true,
       isPublished: false,
@@ -112,7 +122,12 @@ export async function getForm(id: string): Promise<FormResponse> {
           id: users.id,
           name: users.name,
           email: users.email,
-          department: users.department,
+          username: users.username,
+          degree: users.degree,
+          specialization: users.specialization,
+          mobile: users.mobile,
+          role: users.role,
+          photo: users.photo,
         },
       })
       .from(forms)
@@ -126,14 +141,15 @@ export async function getForm(id: string): Promise<FormResponse> {
 
     const { form, creator } = result;
     const isOwner = user ? form.createdBy === user.id : false;
+    const isAdmin = user ? user.role === "admin" : false;
     const isPublished = form.status === "published";
     const isPastDeadline = form.deadline
       ? new Date() > new Date(form.deadline)
       : false;
 
     // 1. Live status check:
-    // If form is not published, only the owner can preview/edit it.
-    if (!isPublished && !isOwner) {
+    // If form is not published, only the owner or an admin can preview it.
+    if (!isPublished && !isOwner && !isAdmin) {
       return {
         success: false,
         error:
@@ -295,7 +311,17 @@ export async function deleteForm(
       .where(eq(forms.id, id))
       .limit(1);
 
-    if (!existing || existing.createdBy !== user.id) {
+    if (!existing) {
+      return {
+        success: false,
+        error: "Form not found.",
+      };
+    }
+
+    const isOwner = existing.createdBy === user.id;
+    const isAdmin = user.role === "admin";
+
+    if (!isOwner && !isAdmin) {
       return {
         success: false,
         error: "You do not have permission to delete this form.",
@@ -490,7 +516,8 @@ export interface SubmissionWithUser {
     id: string;
     name: string;
     email: string;
-    department: string | null;
+    degree: string | null;
+    specialization: string | null;
   } | null;
 }
 
@@ -527,7 +554,10 @@ export async function getFormSubmissions(
       return { success: false, error: "Form not found." };
     }
 
-    if (form.createdBy !== user.id) {
+    const isOwner = form.createdBy === user.id;
+    const isAdmin = user.role === "admin";
+
+    if (!isOwner && !isAdmin) {
       return {
         success: false,
         error: "You do not have permission to view submissions for this form.",
@@ -556,7 +586,8 @@ export async function getFormSubmissions(
         submitterId: users.id,
         submitterName: users.name,
         submitterEmail: users.email,
-        submitterDept: users.department,
+        submitterDegree: users.degree,
+        submitterSpec: users.specialization,
       })
       .from(formSubmissions)
       .leftJoin(users, eq(formSubmissions.submittedBy, users.id))
@@ -576,7 +607,8 @@ export async function getFormSubmissions(
             id: s.submitterId,
             name: s.submitterName || "User",
             email: s.submitterEmail || "",
-            department: s.submitterDept || null,
+            degree: s.submitterDegree || null,
+            specialization: s.submitterSpec || null,
           }
         : null,
     }));
@@ -620,7 +652,14 @@ export async function getAllSubmissionsForExport(formId: string): Promise<{
       .where(eq(forms.id, formId))
       .limit(1);
 
-    if (!form || form.createdBy !== user.id) {
+    if (!form) {
+      return { success: false, error: "Form not found." };
+    }
+
+    const isOwner = form.createdBy === user.id;
+    const isAdmin = user.role === "admin";
+
+    if (!isOwner && !isAdmin) {
       return { success: false, error: "Unauthorized." };
     }
 
@@ -634,7 +673,8 @@ export async function getAllSubmissionsForExport(formId: string): Promise<{
         submitterId: users.id,
         submitterName: users.name,
         submitterEmail: users.email,
-        submitterDept: users.department,
+        submitterDegree: users.degree,
+        submitterSpec: users.specialization,
       })
       .from(formSubmissions)
       .leftJoin(users, eq(formSubmissions.submittedBy, users.id))
@@ -652,7 +692,8 @@ export async function getAllSubmissionsForExport(formId: string): Promise<{
             id: s.submitterId,
             name: s.submitterName || "User",
             email: s.submitterEmail || "",
-            department: s.submitterDept || null,
+            degree: s.submitterDegree || null,
+            specialization: s.submitterSpec || null,
           }
         : null,
     }));

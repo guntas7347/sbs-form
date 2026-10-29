@@ -140,7 +140,8 @@ function SubmissionsViewerContent() {
         "Submitted At (UTC)",
         "Respondent Name",
         "Respondent Email",
-        "Respondent Department",
+        "Respondent Degree",
+        "Respondent Branch",
         ...questionFields.map((f) => f.label || `Question (${f.id})`),
       ];
 
@@ -154,7 +155,8 @@ function SubmissionsViewerContent() {
           new Date(sub.submittedAt).toISOString(),
           sub.submitter?.name || "Anonymous",
           sub.submitter?.email || "",
-          sub.submitter?.department || "",
+          sub.submitter?.degree || "",
+          sub.submitter?.specialization || "",
           ...questionFields.map((f) => {
             const answer = sub.answers?.[f.id];
             return answer !== undefined ? answer : "";
@@ -310,14 +312,16 @@ function SubmissionsViewerContent() {
                 <ExternalLink className="w-3.5 h-3.5 text-stone-400" />
               </Link>
 
-              {/* Edit Form */}
-              <Link
-                href={`/dashboard/create/${form.id}`}
-                className="px-3.5 py-2 text-xs font-medium rounded-xl border border-stone-200/80 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors inline-flex items-center gap-1.5"
-              >
-                <Edit3 className="w-3.5 h-3.5 text-stone-400" />
-                <span>Edit Form</span>
-              </Link>
+              {/* Edit Form - Only for form owner */}
+              {currentUser && form.createdBy === currentUser.id && (
+                <Link
+                  href={`/dashboard/create/${form.id}`}
+                  className="px-3.5 py-2 text-xs font-medium rounded-xl border border-stone-200/80 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors inline-flex items-center gap-1.5"
+                >
+                  <Edit3 className="w-3.5 h-3.5 text-stone-400" />
+                  <span>Edit Form</span>
+                </Link>
+              )}
 
               {/* Export to CSV Button */}
               <button
@@ -374,7 +378,7 @@ function SubmissionsViewerContent() {
                       <th className="py-3 px-4 w-12 text-center">#</th>
                       <th className="py-3 px-4 min-w-[140px]">Submitted At</th>
                       <th className="py-3 px-4 min-w-[180px]">Respondent</th>
-                      <th className="py-3 px-4 min-w-[130px]">Department</th>
+                      <th className="py-3 px-4 min-w-[140px]">Degree & Branch</th>
                       {questionFields.map((field) => (
                         <th
                           key={field.id}
@@ -438,12 +442,16 @@ function SubmissionsViewerContent() {
                             )}
                           </td>
 
-                          {/* Department */}
+                          {/* Degree & Specialization */}
                           <td className="py-3 px-4 text-stone-600 dark:text-stone-300">
-                            {sub.submitter?.department ? (
+                            {sub.submitter?.degree || sub.submitter?.specialization ? (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/50 text-[11px]">
                                 <Building2 className="w-3 h-3 text-emerald-500" />
-                                <span>{sub.submitter.department}</span>
+                                <span>
+                                  {[sub.submitter.degree, sub.submitter.specialization]
+                                    .filter(Boolean)
+                                    .join(" • ")}
+                                </span>
                               </span>
                             ) : (
                               <span className="text-stone-300 dark:text-stone-700">

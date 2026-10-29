@@ -251,12 +251,28 @@ function FormPageContent() {
             </p>
 
             {creator && (
-              <div className="mb-6 p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-100 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400 flex items-center justify-center gap-2">
-                <User className="w-3.5 h-3.5 text-stone-400" />
+              <div className="mb-6 p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-100 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400 flex flex-wrap items-center justify-center gap-2">
+                {creator.photo ? (
+                  <img
+                    src={creator.photo}
+                    alt={creator.name}
+                    className="w-4 h-4 rounded-full object-cover"
+                  />
+                ) : (
+                  <User className="w-3.5 h-3.5 text-stone-400" />
+                )}
                 <span>
                   Created by <strong>{creator.name}</strong>
-                  {creator.department && ` (${creator.department})`}
+                  {(creator.degree || creator.specialization) &&
+                    ` (${[creator.degree, creator.specialization]
+                      .filter(Boolean)
+                      .join(" • ")})`}
                 </span>
+                {creator.role && (
+                  <span className="capitalize px-2 py-0.5 rounded-full text-[10px] font-semibold bg-orange-100/70 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 border border-orange-200/60 dark:border-orange-800/40">
+                    {creator.role}
+                  </span>
+                )}
               </div>
             )}
 
@@ -323,11 +339,27 @@ function FormPageContent() {
             {/* Creator Attribution */}
             {creator && (
               <div className="inline-flex items-center gap-1.5 text-xs text-stone-400 dark:text-stone-500 bg-stone-50 dark:bg-stone-900/60 px-3 py-1 rounded-full border border-stone-100 dark:border-stone-800">
-                <User className="w-3 h-3 text-orange-400" />
+                {creator.photo ? (
+                  <img
+                    src={creator.photo}
+                    alt={creator.name}
+                    className="w-3.5 h-3.5 rounded-full object-cover"
+                  />
+                ) : (
+                  <User className="w-3 h-3 text-orange-400" />
+                )}
                 <span>
                   Form by <strong>{creator.name}</strong>
-                  {creator.department && ` • ${creator.department}`}
+                  {(creator.degree || creator.specialization) &&
+                    ` • ${[creator.degree, creator.specialization]
+                      .filter(Boolean)
+                      .join(" • ")}`}
                 </span>
+                {creator.role && (
+                  <span className="capitalize font-medium text-[11px] text-orange-600 dark:text-orange-400">
+                    ({creator.role})
+                  </span>
+                )}
               </div>
             )}
 
@@ -470,16 +502,35 @@ function FormPageContent() {
           {creator && (
             <div className="flex flex-wrap items-center gap-2 mb-4 text-xs">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300 border border-orange-200/60 dark:border-orange-800/40 font-medium">
-                <User className="w-3.5 h-3.5 text-orange-500" />
+                {creator.photo ? (
+                  <img
+                    src={creator.photo}
+                    alt={creator.name}
+                    className="w-4 h-4 rounded-full object-cover"
+                  />
+                ) : (
+                  <User className="w-3.5 h-3.5 text-orange-500" />
+                )}
                 <span>
                   Created by <strong>{creator.name}</strong>
                 </span>
               </span>
 
-              {creator.department && (
+              {creator.role && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/40 font-semibold uppercase tracking-wider text-[10px]">
+                  <ShieldCheck className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                  <span>{creator.role}</span>
+                </span>
+              )}
+
+              {(creator.degree || creator.specialization) && (
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/40 font-medium">
                   <Building2 className="w-3.5 h-3.5 text-emerald-500" />
-                  <span>{creator.department} Department</span>
+                  <span>
+                    {[creator.degree, creator.specialization]
+                      .filter(Boolean)
+                      .join(" • ")}
+                  </span>
                 </span>
               )}
             </div>
