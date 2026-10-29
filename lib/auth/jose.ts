@@ -1,9 +1,9 @@
+import "server-only";
+
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || "default_jwt_secret_key_sbs_form_32char"
-);
+const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
 
 export const AUTH_COOKIE_NAME = "auth_token";
 
@@ -54,4 +54,3 @@ export async function getCurrentUserId() {
   const payload = await verifyToken(token);
   return (payload?.userId as string) || null;
 }
-

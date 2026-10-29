@@ -1,3 +1,5 @@
+import "server-only";
+
 import {
   pgTable,
   uuid,
@@ -84,4 +86,3 @@ export interface PostSubmissionSettings {
   links?: PostSubmissionLink[];
   imageUrl?: string;
 }
-

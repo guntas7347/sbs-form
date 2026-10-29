@@ -20,7 +20,7 @@ export interface SSOTokenResponse {
 }
 
 export function getNormalizedSsoUrl(): string {
-  const rawUrl = process.env.SSO_URL || "http://localhost:3000";
+  const rawUrl = process.env.NEXT_PUBLIC_SSO_URL!;
   let url = rawUrl.trim();
   if (!url.startsWith("http://") && !url.startsWith("https://")) {
     url = `http://${url}`;
@@ -33,9 +33,11 @@ export const getSSOUrl = () => {
   return `${baseUrl}/?callBack=sbs-form`;
 };
 
-export async function exchangeCodeForUser(code: string): Promise<SSOUserPayload> {
+export async function exchangeCodeForUser(
+  code: string,
+): Promise<SSOUserPayload> {
   const baseUrl = getNormalizedSsoUrl();
-  
+
   // Try /api/auth/token/s1 first, then fallback to /api/token/s1 if 404
   const primaryEndpoint = `${baseUrl}/api/auth/token/s1`;
   const fallbackEndpoint = `${baseUrl}/api/token/s1`;
@@ -63,7 +65,8 @@ export async function exchangeCodeForUser(code: string): Promise<SSOUserPayload>
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));
     throw new Error(
-      errorBody.message || `SSO token exchange failed with status ${res.status}`
+      errorBody.message ||
+        `SSO token exchange failed with status ${res.status}`,
     );
   }
 
