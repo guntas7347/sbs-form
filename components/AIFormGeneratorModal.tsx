@@ -11,9 +11,13 @@ import {
   Wand2,
   ChevronLeft,
   ExternalLink,
+  PlayCircle,
 } from "lucide-react";
 import { nanoid } from "nanoid";
-import { type FormBuilderState, type FormField } from "@/app/dashboard/create/[id]/page";
+import {
+  type FormBuilderState,
+  type FormField,
+} from "@/app/dashboard/create/[id]/page";
 import { type PostSubmissionSettings } from "@/lib/drizzle/schema";
 
 interface AIFormGeneratorModalProps {
@@ -125,7 +129,9 @@ export function AIFormGeneratorModal({
     setParseError("");
 
     if (!jsonInput.trim()) {
-      setParseError("Please paste the JSON code output from ChatGPT or Gemini.");
+      setParseError(
+        "Please paste the JSON code output from ChatGPT or Gemini.",
+      );
       return;
     }
 
@@ -151,7 +157,9 @@ export function AIFormGeneratorModal({
           "image",
         ];
 
-        const rawType = String(f?.type || "text").toLowerCase().trim();
+        const rawType = String(f?.type || "text")
+          .toLowerCase()
+          .trim();
         const type = allowedTypes.includes(rawType) ? rawType : "text";
 
         return {
@@ -178,7 +186,9 @@ export function AIFormGeneratorModal({
             : "Thank you! Your response has been recorded.",
         links: Array.isArray(rawPost.links)
           ? rawPost.links
-              .filter((l: any) => l && typeof l === "object" && (l.url || l.name))
+              .filter(
+                (l: any) => l && typeof l === "object" && (l.url || l.name),
+              )
               .map((l: any) => ({
                 name: String(l.name || "Link").trim(),
                 url: String(l.url || "").trim(),
@@ -265,9 +275,23 @@ export function AIFormGeneratorModal({
             /* STEP 1: Big User Prompt Box */
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs sm:text-sm font-bold text-stone-800 dark:text-stone-200">
-                  What kind of form do you want to create?
-                </label>
+                <div className="flex items-center justify-between gap-2">
+                  <label className="text-xs sm:text-sm font-bold text-stone-800 dark:text-stone-200">
+                    What kind of form do you want to create?
+                  </label>
+
+                  <a
+                    href="https://youtu.be/VkfsDj0wchY"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors whitespace-nowrap"
+                  >
+                    <PlayCircle className="w-3.5 h-3.5" />
+                    Video Guide
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+
                 <p className="text-[11px] text-stone-500 dark:text-stone-400 leading-relaxed">
                   Type your prompt in detail below. Describe questions, choices,
                   or instructions you want included.
@@ -285,8 +309,8 @@ export function AIFormGeneratorModal({
               />
 
               <div className="p-3 rounded-xl bg-orange-50/60 dark:bg-stone-900/60 border border-orange-200/60 dark:border-stone-800 text-[11px] text-stone-600 dark:text-stone-400 leading-relaxed">
-                💡 Clicking <strong>Next</strong> will automatically package your
-                request into an optimized, strict schema prompt and copy it
+                💡 Clicking <strong>Next</strong> will automatically package
+                your request into an optimized, strict schema prompt and copy it
                 directly to your clipboard ready for ChatGPT or Gemini.
               </div>
             </div>
@@ -301,8 +325,8 @@ export function AIFormGeneratorModal({
                 </div>
                 <p className="text-[11px] leading-relaxed text-emerald-700 dark:text-emerald-300">
                   Please paste it into <strong>ChatGPT</strong> or{" "}
-                  <strong>Gemini</strong>, copy the generated JSON code, and paste
-                  it in the box below.
+                  <strong>Gemini</strong>, copy the generated JSON code, and
+                  paste it in the box below.
                 </p>
                 <div className="pt-1 flex items-center gap-2">
                   <button
