@@ -68,7 +68,7 @@ export async function createForm(initialData?: {
         createdBy: user.id,
         fields: [],
         status: "draft",
-        isPublic: false,
+        isPublic: true,
         deadline: initialData?.deadline || oneYearFromNow,
         postSubmission: initialData?.postSubmission || {
           message: "Thank you! Your response has been recorded.",

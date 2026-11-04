@@ -27,7 +27,7 @@ export function BrandLogo({
 
   const Content = (
     <div className={`inline-flex items-center gap-2.5 ${className}`}>
-      <img src="sbssu-logo.png" className="size-10" />
+      <img src="/sbssu-logo.png" className="size-10" />
 
       <div className="flex flex-col">
         <span
