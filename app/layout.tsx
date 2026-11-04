@@ -13,8 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SBS FORMS | Minimal Intelligent Form Platform",
-  description: "Minimalist form engine styled with light orange and light green accents, backed by secure JWT cookie authentication.",
+  title: "SBS FORMS | SBSSU",
+  description:
+    "A unified platform for digital form management and submissions.",
+  icons: {
+    icon: "/sbssu-logo.png",
+  },
 };
 
 export default function RootLayout({
@@ -34,4 +38,3 @@ export default function RootLayout({
     </html>
   );
 }
-
