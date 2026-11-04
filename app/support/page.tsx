@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FAQSection } from "./FAQSection"; // Import the client component
 import Footer from "@/components/Footer";
 
-export const instant = false;
+// // export const instant = false;
 
 export default async function SupportPage() {
   const user = await getCurrentUser();

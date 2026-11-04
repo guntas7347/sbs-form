@@ -20,7 +20,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
-export const instant = false;
+// export const instant = false;
 
 export default async function DashboardPage(props: {
   searchParams?: Promise<{ page?: string; tab?: string }>;
@@ -99,7 +99,9 @@ export default async function DashboardPage(props: {
                 </span>
                 {(user.degree || user.specialization) && (
                   <span className="px-2 py-0.5 rounded-full text-[11px] bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/50">
-                    {[user.degree, user.specialization].filter(Boolean).join(" • ")}
+                    {[user.degree, user.specialization]
+                      .filter(Boolean)
+                      .join(" • ")}
                   </span>
                 )}
               </p>
@@ -274,7 +276,7 @@ export default async function DashboardPage(props: {
                       <Link
                         href={`/dashboard?page=${Math.max(
                           1,
-                          page - 1
+                          page - 1,
                         )}&tab=my-forms`}
                         className={`p-2 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 inline-flex items-center gap-1 ${
                           page <= 1
@@ -294,7 +296,7 @@ export default async function DashboardPage(props: {
                       <Link
                         href={`/dashboard?page=${Math.min(
                           totalPages,
-                          page + 1
+                          page + 1,
                         )}&tab=my-forms`}
                         className={`p-2 rounded-xl border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-800 inline-flex items-center gap-1 ${
                           page >= totalPages

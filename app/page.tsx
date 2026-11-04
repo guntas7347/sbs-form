@@ -2,7 +2,7 @@ import { getCurrentUser } from "@/lib/actions/auth";
 import { Navbar } from "@/components/Navbar";
 import Link from "next/link";
 
-export const instant = false;
+// export const instant = false;
 
 import {
   ArrowRight,
