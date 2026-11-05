@@ -6,7 +6,7 @@ import { randomUUID } from "node:crypto";
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(process.cwd(), "data");
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1 MB
 
 const ALLOWED_TYPES = new Set([
   "image/jpeg",

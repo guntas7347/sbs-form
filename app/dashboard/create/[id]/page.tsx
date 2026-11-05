@@ -232,7 +232,8 @@ const FieldItem = ({
         )}
         {field.type === "file" && (
           <div className="border border-dashed border-stone-200 dark:border-stone-800 rounded-xl p-3 text-xs text-stone-400 dark:text-stone-500 bg-stone-50/50 dark:bg-stone-900/30">
-            File Uploader (Max Size: 2MB)
+            File Upload (Maximum 1 MB; uploaded files are automatically deleted
+            after 30 days).
           </div>
         )}
       </div>

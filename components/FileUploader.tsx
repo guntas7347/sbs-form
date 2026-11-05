@@ -16,7 +16,7 @@ export default function FileUploader({
   value,
   onChange,
   accept,
-  maxSize = 10,
+  maxSize = 1, // Default max size is 1 MB
   disabled = false,
 }: FileUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
