@@ -29,7 +29,7 @@ export function getNormalizedSsoUrl(): string {
 }
 
 export const getSSOUrl = () => {
-  const isProd = process.env.NEXT_PUBLIC_APP_ENV === "production" || false;
+  const isProd = process.env.NEXT_PUBLIC_APP_ENV !== "development";
   const baseUrl = getNormalizedSsoUrl();
   return `${baseUrl}/?callBack=${isProd ? "sbs-form" : "localhost-dev"}`;
 };
