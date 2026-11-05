@@ -37,7 +37,7 @@ JSON Schema Specification:
   "fields": [
     {
       "label": "string (question prompt or note heading)",
-      "type": "text" | "textarea" | "multiple choice" | "checkboxes" | "date" | "time" | "text box" | "image",
+      "type": "text" | "textarea" | "multiple choice" | "checkboxes" | "date" | "time" | "text box" | "image" | "file",
       "required": boolean (MUST be true for all questions by default),
       "options": ["Option 1", "Option 2"] (array of strings, ONLY required when type is "multiple choice" or "checkboxes"),
       "content": "string" (ONLY used when type is "text box" for descriptive note text, or "image" for image URL)
@@ -64,6 +64,7 @@ Field Type Guidelines:
 - "time": Time picker
 - "text box": Static instruction/information note shown to the respondent
 - "image": Static image banner URL
+- "file": File upload fields
 
 User Form Requirements:
 [USER_PROMPT]`;
@@ -71,19 +72,86 @@ User Form Requirements:
 function cleanAndExtractJson(raw: string): string {
   let cleaned = raw.trim();
 
-  // Strip markdown code fences if present
-  if (cleaned.startsWith("```")) {
-    cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+  // 1. Decode common HTML entities
+  cleaned = cleaned
+    .replace(/&#x20;/gi, " ")
+    .replace(/&#32;/g, " ")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, " ");
+
+  // 2. Remove markdown code fences
+  cleaned = cleaned
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+
+  // 3. Remove escaped line continuation artifacts
+  cleaned = cleaned.replace(/\\\s*\r?\n/g, "\n");
+
+  // 4. Extract JSON boundaries, respecting strings
+  const start = cleaned.search(/[\[{]/);
+
+  if (start === -1) {
+    throw new Error("No JSON object or array found.");
   }
 
-  // Find outermost curly braces to ignore any chat greetings/trailers
-  const firstBrace = cleaned.indexOf("{");
-  const lastBrace = cleaned.lastIndexOf("}");
-  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-    cleaned = cleaned.substring(firstBrace, lastBrace + 1);
+  const opening = cleaned[start];
+  const closing = opening === "{" ? "}" : "]";
+
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  let end = -1;
+
+  for (let i = start; i < cleaned.length; i++) {
+    const char = cleaned[i];
+
+    if (inString) {
+      if (escaped) {
+        escaped = false;
+      } else if (char === "\\") {
+        escaped = true;
+      } else if (char === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (char === '"') {
+      inString = true;
+    } else if (char === opening || char === (opening === "{" ? "[" : "{")) {
+      depth++;
+    } else if (char === closing || char === (closing === "}" ? "]" : "}")) {
+      depth--;
+
+      if (depth === 0) {
+        end = i;
+        break;
+      }
+    }
   }
 
-  return cleaned.trim();
+  if (end === -1) {
+    throw new Error("Incomplete JSON structure.");
+  }
+
+  cleaned = cleaned.slice(start, end + 1);
+
+  // 5. Remove trailing commas before closing brackets
+  cleaned = cleaned.replace(/,\s*([}\]])/g, "$1");
+
+  // 6. Validate JSON
+  try {
+    JSON.parse(cleaned);
+    return cleaned;
+  } catch {
+    throw new Error(
+      "Invalid JSON. The AI output contains malformed JSON syntax.",
+    );
+  }
 }
 
 export function AIFormGeneratorModal({
@@ -155,6 +223,7 @@ export function AIFormGeneratorModal({
           "time",
           "text box",
           "image",
+          "file",
         ];
 
         const rawType = String(f?.type || "text")

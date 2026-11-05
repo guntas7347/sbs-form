@@ -29,8 +29,9 @@ export function getNormalizedSsoUrl(): string {
 }
 
 export const getSSOUrl = () => {
+  const isProd = process.env.NEXT_PUBLIC_APP_ENV === "production" || false;
   const baseUrl = getNormalizedSsoUrl();
-  return `${baseUrl}/?callBack=sbs-form`;
+  return `${baseUrl}/?callBack=${isProd ? "sbs-form" : "localhost-dev"}`;
 };
 
 export async function exchangeCodeForUser(

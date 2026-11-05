@@ -48,7 +48,12 @@ function escapeCsvCell(value: any): string {
   }
 
   // If string contains comma, double-quote, or newline, escape quotes and wrap in quotes
-  if (str.includes('"') || str.includes(",") || str.includes("\n") || str.includes("\r")) {
+  if (
+    str.includes('"') ||
+    str.includes(",") ||
+    str.includes("\n") ||
+    str.includes("\r")
+  ) {
     return `"${str.replace(/"/g, '""')}"`;
   }
   return str;
@@ -159,7 +164,9 @@ function SubmissionsViewerContent() {
           sub.submitter?.specialization || "",
           ...questionFields.map((f) => {
             const answer = sub.answers?.[f.id];
-            return answer !== undefined ? answer : "";
+            if (answer === undefined || answer === null) return "";
+            if (f.type === "file") return `${window.location.origin}${answer}`;
+            return answer;
           }),
         ];
         rows.push(row.map(escapeCsvCell).join(","));
@@ -266,7 +273,8 @@ function SubmissionsViewerContent() {
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300 border border-orange-200/60 dark:border-orange-800/40 font-semibold">
                   <TableIcon className="w-3.5 h-3.5" />
                   <span>
-                    {totalCount} {totalCount === 1 ? "submission" : "submissions"} total
+                    {totalCount}{" "}
+                    {totalCount === 1 ? "submission" : "submissions"} total
                   </span>
                 </span>
 
@@ -292,7 +300,9 @@ function SubmissionsViewerContent() {
                 {copiedLink ? (
                   <>
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                    <span className="text-emerald-600 font-semibold">Copied!</span>
+                    <span className="text-emerald-600 font-semibold">
+                      Copied!
+                    </span>
                   </>
                 ) : (
                   <>
@@ -378,7 +388,9 @@ function SubmissionsViewerContent() {
                       <th className="py-3 px-4 w-12 text-center">#</th>
                       <th className="py-3 px-4 min-w-[140px]">Submitted At</th>
                       <th className="py-3 px-4 min-w-[180px]">Respondent</th>
-                      <th className="py-3 px-4 min-w-[140px]">Degree & Branch</th>
+                      <th className="py-3 px-4 min-w-[140px]">
+                        Degree & Branch
+                      </th>
                       {questionFields.map((field) => (
                         <th
                           key={field.id}
@@ -444,11 +456,15 @@ function SubmissionsViewerContent() {
 
                           {/* Degree & Specialization */}
                           <td className="py-3 px-4 text-stone-600 dark:text-stone-300">
-                            {sub.submitter?.degree || sub.submitter?.specialization ? (
+                            {sub.submitter?.degree ||
+                            sub.submitter?.specialization ? (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/50 text-[11px]">
                                 <Building2 className="w-3 h-3 text-emerald-500" />
                                 <span>
-                                  {[sub.submitter.degree, sub.submitter.specialization]
+                                  {[
+                                    sub.submitter.degree,
+                                    sub.submitter.specialization,
+                                  ]
                                     .filter(Boolean)
                                     .join(" • ")}
                                 </span>
@@ -465,8 +481,14 @@ function SubmissionsViewerContent() {
                             const val = sub.answers?.[field.id];
                             let displayVal = "—";
 
-                            if (val !== undefined && val !== null && val !== "") {
-                              if (Array.isArray(val)) {
+                            if (
+                              val !== undefined &&
+                              val !== null &&
+                              val !== ""
+                            ) {
+                              if (field.type === "file") {
+                                displayVal = String(val);
+                              } else if (Array.isArray(val)) {
                                 displayVal = val.join(", ");
                               } else if (typeof val === "boolean") {
                                 displayVal = val ? "Yes" : "No";
@@ -480,12 +502,23 @@ function SubmissionsViewerContent() {
                                 key={field.id}
                                 className="py-3 px-4 text-stone-700 dark:text-stone-300 text-xs max-w-[280px]"
                               >
-                                <div
-                                  className="line-clamp-3 leading-relaxed"
-                                  title={displayVal !== "—" ? displayVal : ""}
-                                >
-                                  {displayVal}
-                                </div>
+                                {field.type === "file" && displayVal !== "—" ? (
+                                  <a
+                                    href={displayVal} // file upload path is sublink
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-orange-600 hover:text-orange-700 hover:underline font-medium"
+                                  >
+                                    View uploaded file
+                                  </a>
+                                ) : (
+                                  <div
+                                    className="line-clamp-3 leading-relaxed"
+                                    title={displayVal !== "—" ? displayVal : ""}
+                                  >
+                                    {displayVal}
+                                  </div>
+                                )}
                               </td>
                             );
                           })}

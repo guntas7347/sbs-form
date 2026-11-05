@@ -18,11 +18,7 @@ import {
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  getForm,
-  submitForm,
-  type FormCreatorInfo,
-} from "@/lib/actions/forms";
+import { getForm, submitForm, type FormCreatorInfo } from "@/lib/actions/forms";
 import { getCurrentUser } from "@/lib/actions/auth";
 import { BrandLogo } from "@/components/BrandLogo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -30,6 +26,7 @@ import {
   type PostSubmissionSettings,
   type PostSubmissionLink,
 } from "@/lib/drizzle/schema";
+import FileUploader from "@/components/FileUploader";
 
 interface FormField {
   id: string;
@@ -247,7 +244,8 @@ function FormPageContent() {
                   ? "The deadline for this form has passed. New submissions are no longer being accepted by the form creator."
                   : isDraft
                     ? "This form is currently in draft mode and is not live for public responses. Please check back later."
-                    : error || "This form could not be found or has been removed."}
+                    : error ||
+                      "This form could not be found or has been removed."}
             </p>
 
             {creator && (
@@ -303,8 +301,7 @@ function FormPageContent() {
     const postSettings: PostSubmissionSettings =
       submittedPostSettings || form.postSubmission || {};
     const successMessage =
-      postSettings.message ||
-      "Thank you! Your response has been recorded.";
+      postSettings.message || "Thank you! Your response has been recorded.";
     const links: PostSubmissionLink[] = Array.isArray(postSettings.links)
       ? postSettings.links
       : [];
@@ -743,6 +740,13 @@ function FormPageContent() {
                       value={answers[field.id] || ""}
                       onChange={(e) => handleChange(field.id, e.target.value)}
                       className="w-full sm:w-auto text-xs sm:text-sm p-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/40 dark:bg-stone-900 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-orange-500 transition-colors min-h-[46px]"
+                    />
+                  )}
+
+                  {field.type === "file" && (
+                    <FileUploader
+                      value={answers[field.id] || ""}
+                      onChange={(value) => handleChange(field.id, value)}
                     />
                   )}
                 </div>

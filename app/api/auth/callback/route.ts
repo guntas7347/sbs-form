@@ -42,8 +42,6 @@ export async function GET(request: NextRequest) {
     // 8. Exchange the Code for the User Payload
     const ssoUser = await exchangeCodeForUser(code);
 
-    console.log(ssoUser);
-
     const email = ssoUser.email?.trim().toLowerCase();
     if (!email) {
       throw new Error("SSO user payload did not contain a valid email address");

@@ -158,6 +158,7 @@ const FieldItem = ({
             <option value="time">Time</option>
             <option value="text box">Instruction Note</option>
             <option value="image">Image Banner</option>
+            <option value="file">File Upload</option>
           </select>
         </div>
       </div>
@@ -227,6 +228,11 @@ const FieldItem = ({
                 />
               </div>
             )}
+          </div>
+        )}
+        {field.type === "file" && (
+          <div className="border border-dashed border-stone-200 dark:border-stone-800 rounded-xl p-3 text-xs text-stone-400 dark:text-stone-500 bg-stone-50/50 dark:bg-stone-900/30">
+            File Uploader (Max Size: 2MB)
           </div>
         )}
       </div>
@@ -403,10 +409,13 @@ function FormBuilderContent() {
   }, [form?.description]);
 
   // Split deadline parts for manual editing
-  const deadlineDatePart = form?.deadline ? form.deadline.split("T")[0] || "" : "";
-  const deadlineTimePart = form?.deadline && form.deadline.includes("T")
-    ? form.deadline.split("T")[1].slice(0, 5) || "23:59"
-    : "23:59";
+  const deadlineDatePart = form?.deadline
+    ? form.deadline.split("T")[0] || ""
+    : "";
+  const deadlineTimePart =
+    form?.deadline && form.deadline.includes("T")
+      ? form.deadline.split("T")[1].slice(0, 5) || "23:59"
+      : "23:59";
 
   const handleManualDateChange = (newDate: string) => {
     if (!form) return;
@@ -475,7 +484,9 @@ function FormBuilderContent() {
     try {
       const res = await updateForm(form.id, {
         ...dataToSave,
-        deadline: dataToSave.deadline ? new Date(dataToSave.deadline) : undefined,
+        deadline: dataToSave.deadline
+          ? new Date(dataToSave.deadline)
+          : undefined,
       });
 
       if (res.success && res.form) {
@@ -499,8 +510,7 @@ function FormBuilderContent() {
           deadline: deadlineIso,
           postSubmission: {
             message:
-              postSub.message ??
-              "Thank you! Your response has been recorded.",
+              postSub.message ?? "Thank you! Your response has been recorded.",
             links: Array.isArray(postSub.links) ? postSub.links : [],
             imageUrl: postSub.imageUrl ?? "",
           },
@@ -910,7 +920,8 @@ function FormBuilderContent() {
                   )}
                 </div>
                 <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5 leading-relaxed">
-                  Submissions automatically close after this date & time. Edit manually below or pick presets.
+                  Submissions automatically close after this date & time. Edit
+                  manually below or pick presets.
                 </p>
 
                 {/* Manual Editing Inputs */}
@@ -1032,7 +1043,10 @@ function FormBuilderContent() {
             <div className="flex items-center gap-2.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>
-                <strong>Form prefilled from AI!</strong> Questions, options, and settings have been populated. Review them and click <strong>Save</strong> when you are ready to persist your changes.
+                <strong>Form prefilled from AI!</strong> Questions, options, and
+                settings have been populated. Review them and click{" "}
+                <strong>Save</strong> when you are ready to persist your
+                changes.
               </span>
             </div>
             <button
@@ -1079,7 +1093,8 @@ function FormBuilderContent() {
                 No questions added yet
               </p>
               <p className="text-xs text-stone-400 mt-1 mb-4">
-                Add questions manually or use AI to generate your entire form structure in seconds.
+                Add questions manually or use AI to generate your entire form
+                structure in seconds.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-2.5">
                 <button
