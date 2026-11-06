@@ -27,6 +27,7 @@ import {
   type PostSubmissionLink,
 } from "@/lib/drizzle/schema";
 import FileUploader from "@/components/FileUploader";
+import ImageField from "@/components/ImageField";
 
 interface FormField {
   id: string;
@@ -593,28 +594,7 @@ function FormPageContent() {
 
             // 2. Image Banner
             if (field.type === "image") {
-              return (
-                <div
-                  key={field.id}
-                  className="rounded-2xl bg-white dark:bg-[#131920] border border-stone-200/80 dark:border-stone-800 p-3 sm:p-4 overflow-hidden"
-                >
-                  {field.label && (
-                    <p className="font-semibold text-xs text-stone-500 mb-2">
-                      {field.label}
-                    </p>
-                  )}
-                  {field.content && (
-                    <img
-                      src={field.content}
-                      alt={field.label || "Banner"}
-                      className="rounded-xl w-full max-h-72 object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  )}
-                </div>
-              );
+              return <ImageField key={field.id} field={field} />;
             }
 
             // External Link Button
