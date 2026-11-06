@@ -15,6 +15,7 @@ import {
   User,
   Building2,
   Sparkles,
+  LockKeyhole,
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
@@ -567,243 +568,268 @@ function FormPageContent() {
           </div>
         </div>
 
-        {/* Form Body Form Fields */}
-        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-          {fields.map((field) => {
-            const hasError = !!validationErrors[field.id];
+        {isExpired ? (
+          <div className="min-h-[60vh] flex items-center justify-center px-4">
+            <div className="w-full max-w-md rounded-3xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-[#131920] p-8 sm:p-10 text-center shadow-sm">
+              <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-50 dark:bg-orange-500/10">
+                <LockKeyhole className="h-8 w-8 text-orange-600 dark:text-orange-400" />
+              </div>
 
-            // 1. Text Box (Notice/Instruction)
-            if (field.type === "text box") {
-              return (
-                <div
-                  key={field.id}
-                  className="rounded-2xl bg-amber-50/60 dark:bg-[#151a21] border border-amber-200/70 dark:border-amber-900/40 p-4 sm:p-5"
-                >
-                  {field.label && (
-                    <h3 className="font-bold text-sm text-amber-950 dark:text-amber-200 mb-1">
-                      {field.label}
-                    </h3>
-                  )}
-                  <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed whitespace-pre-line">
-                    {field.content}
-                  </p>
-                </div>
-              );
-            }
+              <span className="inline-flex items-center rounded-full bg-stone-100 dark:bg-stone-800 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400 mb-3">
+                Registration Closed
+              </span>
 
-            // 2. Image Banner
-            if (field.type === "image") {
-              return <ImageField key={field.id} field={field} />;
-            }
+              <h2 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white">
+                Form Closed
+              </h2>
 
-            // External Link Button
-            if (field.type === "href") {
-              return (
-                <div
-                  key={field.id}
-                  className="rounded-2xl bg-white dark:bg-[#131920] border border-stone-200/80 dark:border-stone-800 p-3 sm:p-4"
-                >
-                  <div className="flex items-center justify-between gap-3 mb-2">
-                    {field.label && (
-                      <p className="font-semibold text-xs text-stone-600 dark:text-stone-300">
-                        {field.label}
-                      </p>
-                    )}
-                    <span className="text-[10px] font-mono text-stone-400 shrink-0">
-                      {field.id}
-                    </span>
-                  </div>
+              <p className="mt-3 text-sm leading-relaxed text-stone-500 dark:text-stone-400">
+                This form is no longer accepting responses. The registration
+                period has ended. Thank you for your interest.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+            {fields.map((field) => {
+              const hasError = !!validationErrors[field.id];
 
-                  <a
-                    href={field.content}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 hover:bg-orange-50 dark:hover:bg-orange-500/10 hover:border-orange-300 dark:hover:border-orange-500/30 hover:text-orange-700 dark:hover:text-orange-300 transition-all cursor-pointer"
+              // 1. Text Box (Notice/Instruction)
+              if (field.type === "text box") {
+                return (
+                  <div
+                    key={field.id}
+                    className="rounded-2xl bg-amber-50/60 dark:bg-[#151a21] border border-amber-200/70 dark:border-amber-900/40 p-4 sm:p-5"
                   >
-                    <span>Open Link</span>
-                    <ExternalLink className="w-3.5 h-3.5 shrink-0" />
-                  </a>
-                </div>
-              );
-            }
-
-            // Standard Question Fields
-            return (
-              <div
-                key={field.id}
-                id={`field-${field.id}`}
-                className={`rounded-2xl bg-white dark:bg-[#131920] border p-5 sm:p-6 shadow-xs transition-all ${
-                  hasError
-                    ? "border-rose-400 dark:border-rose-800 bg-rose-50/10"
-                    : "border-stone-200/80 dark:border-stone-800 hover:border-orange-200 dark:hover:border-stone-700"
-                }`}
-              >
-                <label className="block mb-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="font-bold text-sm sm:text-base text-stone-900 dark:text-stone-100">
-                      {field.label || "Untitled Question"}
-                      {field.required && (
-                        <span
-                          className="text-orange-500 ml-1 font-bold"
-                          title="Required"
-                        >
-                          *
-                        </span>
-                      )}
-                    </span>
+                    {field.label && (
+                      <h3 className="font-bold text-sm text-amber-950 dark:text-amber-200 mb-1">
+                        {field.label}
+                      </h3>
+                    )}
+                    <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed whitespace-pre-line">
+                      {field.content}
+                    </p>
                   </div>
-                </label>
+                );
+              }
 
-                {/* Input Controls */}
-                <div>
-                  {field.type === "text" && (
-                    <input
-                      type="text"
-                      value={answers[field.id] || ""}
-                      onChange={(e) => handleChange(field.id, e.target.value)}
-                      placeholder="Your answer..."
-                      className="w-full text-xs sm:text-sm p-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/40 dark:bg-stone-900 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-orange-500 transition-colors min-h-[46px]"
-                    />
-                  )}
+              // 2. Image Banner
+              if (field.type === "image") {
+                return <ImageField key={field.id} field={field} />;
+              }
 
-                  {field.type === "textarea" && (
-                    <textarea
-                      rows={3}
-                      value={answers[field.id] || ""}
-                      onChange={(e) => handleChange(field.id, e.target.value)}
-                      placeholder="Type your response here..."
-                      className="w-full text-xs sm:text-sm p-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/40 dark:bg-stone-900 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-orange-500 transition-colors resize-y"
-                    />
-                  )}
-
-                  {field.type === "multiple choice" && (
-                    <div className="space-y-2 pt-1">
-                      {(field.options || []).map((opt, i) => (
-                        <label
-                          key={i}
-                          className={`flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer min-h-[46px] select-none ${
-                            answers[field.id] === opt
-                              ? "border-orange-400 bg-orange-50/50 dark:bg-orange-950/30 text-stone-900 dark:text-white"
-                              : "border-stone-200/80 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-800/60 text-stone-700 dark:text-stone-300"
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name={`radio-${field.id}`}
-                            value={opt}
-                            checked={answers[field.id] === opt}
-                            onChange={() => handleChange(field.id, opt)}
-                            className="w-4 h-4 text-orange-500 accent-orange-500 cursor-pointer"
-                          />
-                          <span className="text-xs sm:text-sm font-medium">
-                            {opt}
-                          </span>
-                        </label>
-                      ))}
+              // External Link Button
+              if (field.type === "href") {
+                return (
+                  <div
+                    key={field.id}
+                    className="rounded-2xl bg-white dark:bg-[#131920] border border-stone-200/80 dark:border-stone-800 p-3 sm:p-4"
+                  >
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      {field.label && (
+                        <p className="font-semibold text-xs text-stone-600 dark:text-stone-300">
+                          {field.label}
+                        </p>
+                      )}
+                      <span className="text-[10px] font-mono text-stone-400 shrink-0">
+                        {field.id}
+                      </span>
                     </div>
-                  )}
 
-                  {field.type === "checkboxes" && (
-                    <div className="space-y-2 pt-1">
-                      {(field.options || []).map((opt, i) => {
-                        const checked = (
-                          (answers[field.id] as string[]) || []
-                        ).includes(opt);
-                        return (
+                    <a
+                      href={field.content}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 hover:bg-orange-50 dark:hover:bg-orange-500/10 hover:border-orange-300 dark:hover:border-orange-500/30 hover:text-orange-700 dark:hover:text-orange-300 transition-all cursor-pointer"
+                    >
+                      <span>Open Link</span>
+                      <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                    </a>
+                  </div>
+                );
+              }
+
+              // Standard Question Fields
+              return (
+                <div
+                  key={field.id}
+                  id={`field-${field.id}`}
+                  className={`rounded-2xl bg-white dark:bg-[#131920] border p-5 sm:p-6 shadow-xs transition-all ${
+                    hasError
+                      ? "border-rose-400 dark:border-rose-800 bg-rose-50/10"
+                      : "border-stone-200/80 dark:border-stone-800 hover:border-orange-200 dark:hover:border-stone-700"
+                  }`}
+                >
+                  <label className="block mb-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="font-bold text-sm sm:text-base text-stone-900 dark:text-stone-100">
+                        {field.label || "Untitled Question"}
+                        {field.required && (
+                          <span
+                            className="text-orange-500 ml-1 font-bold"
+                            title="Required"
+                          >
+                            *
+                          </span>
+                        )}
+                      </span>
+                    </div>
+                  </label>
+
+                  {/* Input Controls */}
+                  <div>
+                    {field.type === "text" && (
+                      <input
+                        type="text"
+                        value={answers[field.id] || ""}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        placeholder="Your answer..."
+                        className="w-full text-xs sm:text-sm p-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/40 dark:bg-stone-900 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-orange-500 transition-colors min-h-[46px]"
+                      />
+                    )}
+
+                    {field.type === "textarea" && (
+                      <textarea
+                        rows={3}
+                        value={answers[field.id] || ""}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        placeholder="Type your response here..."
+                        className="w-full text-xs sm:text-sm p-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/40 dark:bg-stone-900 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-orange-500 transition-colors resize-y"
+                      />
+                    )}
+
+                    {field.type === "multiple choice" && (
+                      <div className="space-y-2 pt-1">
+                        {(field.options || []).map((opt, i) => (
                           <label
                             key={i}
                             className={`flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer min-h-[46px] select-none ${
-                              checked
-                                ? "border-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/30 text-stone-900 dark:text-white"
+                              answers[field.id] === opt
+                                ? "border-orange-400 bg-orange-50/50 dark:bg-orange-950/30 text-stone-900 dark:text-white"
                                 : "border-stone-200/80 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-800/60 text-stone-700 dark:text-stone-300"
                             }`}
                           >
                             <input
-                              type="checkbox"
-                              checked={checked}
-                              onChange={() =>
-                                handleCheckboxToggle(field.id, opt)
-                              }
-                              className="w-4 h-4 text-emerald-500 rounded accent-emerald-500 cursor-pointer"
+                              type="radio"
+                              name={`radio-${field.id}`}
+                              value={opt}
+                              checked={answers[field.id] === opt}
+                              onChange={() => handleChange(field.id, opt)}
+                              className="w-4 h-4 text-orange-500 accent-orange-500 cursor-pointer"
                             />
                             <span className="text-xs sm:text-sm font-medium">
                               {opt}
                             </span>
                           </label>
-                        );
-                      })}
-                    </div>
-                  )}
+                        ))}
+                      </div>
+                    )}
 
-                  {field.type === "date" && (
-                    <input
-                      type="date"
-                      value={answers[field.id] || ""}
-                      onChange={(e) => handleChange(field.id, e.target.value)}
-                      className="w-full sm:w-auto text-xs sm:text-sm p-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/40 dark:bg-stone-900 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-orange-500 transition-colors min-h-[46px]"
-                    />
-                  )}
+                    {field.type === "checkboxes" && (
+                      <div className="space-y-2 pt-1">
+                        {(field.options || []).map((opt, i) => {
+                          const checked = (
+                            (answers[field.id] as string[]) || []
+                          ).includes(opt);
+                          return (
+                            <label
+                              key={i}
+                              className={`flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer min-h-[46px] select-none ${
+                                checked
+                                  ? "border-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/30 text-stone-900 dark:text-white"
+                                  : "border-stone-200/80 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-800/60 text-stone-700 dark:text-stone-300"
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={checked}
+                                onChange={() =>
+                                  handleCheckboxToggle(field.id, opt)
+                                }
+                                className="w-4 h-4 text-emerald-500 rounded accent-emerald-500 cursor-pointer"
+                              />
+                              <span className="text-xs sm:text-sm font-medium">
+                                {opt}
+                              </span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
 
-                  {field.type === "time" && (
-                    <input
-                      type="time"
-                      value={answers[field.id] || ""}
-                      onChange={(e) => handleChange(field.id, e.target.value)}
-                      className="w-full sm:w-auto text-xs sm:text-sm p-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/40 dark:bg-stone-900 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-orange-500 transition-colors min-h-[46px]"
-                    />
-                  )}
+                    {field.type === "date" && (
+                      <input
+                        type="date"
+                        value={answers[field.id] || ""}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        className="w-full sm:w-auto text-xs sm:text-sm p-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/40 dark:bg-stone-900 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-orange-500 transition-colors min-h-[46px]"
+                      />
+                    )}
 
-                  {field.type === "file" && (
-                    <FileUploader
-                      value={answers[field.id] || ""}
-                      onChange={(value) => handleChange(field.id, value)}
-                    />
-                  )}
+                    {field.type === "time" && (
+                      <input
+                        type="time"
+                        value={answers[field.id] || ""}
+                        onChange={(e) => handleChange(field.id, e.target.value)}
+                        className="w-full sm:w-auto text-xs sm:text-sm p-3 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50/40 dark:bg-stone-900 text-stone-900 dark:text-stone-100 focus:outline-none focus:border-orange-500 transition-colors min-h-[46px]"
+                      />
+                    )}
 
-                  {field.type === "href" && (
-                    <FileUploader
-                      value={answers[field.id] || ""}
-                      onChange={(value) => handleChange(field.id, value)}
-                    />
+                    {field.type === "file" && (
+                      <FileUploader
+                        value={answers[field.id] || ""}
+                        onChange={(value) => handleChange(field.id, value)}
+                      />
+                    )}
+
+                    {field.type === "href" && (
+                      <FileUploader
+                        value={answers[field.id] || ""}
+                        onChange={(value) => handleChange(field.id, value)}
+                      />
+                    )}
+                  </div>
+
+                  {/* Validation error message */}
+                  {hasError && (
+                    <p className="mt-2 text-xs font-semibold text-rose-500 inline-flex items-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      <span>{validationErrors[field.id]}</span>
+                    </p>
                   )}
                 </div>
+              );
+            })}
 
-                {/* Validation error message */}
-                {hasError && (
-                  <p className="mt-2 text-xs font-semibold text-rose-500 inline-flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    <span>{validationErrors[field.id]}</span>
-                  </p>
-                )}
+            {/* Form Actions (Submit Bar) */}
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-xs text-stone-400">
+                Never submit passwords or sensitive credentials through web
+                forms.
               </div>
-            );
-          })}
 
-          {/* Form Actions (Submit Bar) */}
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-stone-400">
-              Never submit passwords or sensitive credentials through web forms.
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full sm:w-auto px-8 py-3.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-orange-500 to-emerald-500 hover:from-orange-600 hover:to-emerald-600 rounded-xl shadow-md shadow-orange-500/15 disabled:opacity-60 transition-all cursor-pointer inline-flex items-center justify-center gap-2 min-h-[48px]"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Submitting Response...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Submit Response</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
             </div>
+          </form>
+        )}
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full sm:w-auto px-8 py-3.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-orange-500 to-emerald-500 hover:from-orange-600 hover:to-emerald-600 rounded-xl shadow-md shadow-orange-500/15 disabled:opacity-60 transition-all cursor-pointer inline-flex items-center justify-center gap-2 min-h-[48px]"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Submitting Response...</span>
-                </>
-              ) : (
-                <>
-                  <span>Submit Response</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-          </div>
-        </form>
+        {/* Form Body Form Fields */}
       </main>
     </div>
   );
