@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/sbssu-logo.png",
   },
+  metadataBase: new URL("https://forms.sbssu.ac.in"),
 };
 
 export default function RootLayout({
