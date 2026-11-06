@@ -617,6 +617,37 @@ function FormPageContent() {
               );
             }
 
+            // External Link Button
+            if (field.type === "href") {
+              return (
+                <div
+                  key={field.id}
+                  className="rounded-2xl bg-white dark:bg-[#131920] border border-stone-200/80 dark:border-stone-800 p-3 sm:p-4"
+                >
+                  <div className="flex items-center justify-between gap-3 mb-2">
+                    {field.label && (
+                      <p className="font-semibold text-xs text-stone-600 dark:text-stone-300">
+                        {field.label}
+                      </p>
+                    )}
+                    <span className="text-[10px] font-mono text-stone-400 shrink-0">
+                      {field.id}
+                    </span>
+                  </div>
+
+                  <a
+                    href={field.content}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 hover:bg-orange-50 dark:hover:bg-orange-500/10 hover:border-orange-300 dark:hover:border-orange-500/30 hover:text-orange-700 dark:hover:text-orange-300 transition-all cursor-pointer"
+                  >
+                    <span>Open Link</span>
+                    <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                  </a>
+                </div>
+              );
+            }
+
             // Standard Question Fields
             return (
               <div
@@ -744,6 +775,13 @@ function FormPageContent() {
                   )}
 
                   {field.type === "file" && (
+                    <FileUploader
+                      value={answers[field.id] || ""}
+                      onChange={(value) => handleChange(field.id, value)}
+                    />
+                  )}
+
+                  {field.type === "href" && (
                     <FileUploader
                       value={answers[field.id] || ""}
                       onChange={(value) => handleChange(field.id, value)}

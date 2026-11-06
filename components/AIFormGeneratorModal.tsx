@@ -37,10 +37,10 @@ JSON Schema Specification:
   "fields": [
     {
       "label": "string (question prompt or note heading)",
-      "type": "text" | "textarea" | "multiple choice" | "checkboxes" | "date" | "time" | "text box" | "image" | "file",
+      "type": "text" | "textarea" | "multiple choice" | "checkboxes" | "date" | "time" | "text box" | "image" | "file" | "href" (field type, must be one of these exact strings),
       "required": boolean (MUST be true for all questions by default),
       "options": ["Option 1", "Option 2"] (array of strings, ONLY required when type is "multiple choice" or "checkboxes"),
-      "content": "string" (ONLY used when type is "text box" for descriptive note text, or "image" for image URL)
+      "content": "string" (ONLY used when type is "text box" for descriptive note text, or "image" for image URL, or "href" for external link URL)
     }
   ],
   "postSubmission": {
@@ -65,6 +65,7 @@ Field Type Guidelines:
 - "text box": Static instruction/information note shown to the respondent
 - "image": Static image banner URL
 - "file": File upload fields
+- "href": Static External link button (provide label and URL in content)
 
 User Form Requirements:
 [USER_PROMPT]`;

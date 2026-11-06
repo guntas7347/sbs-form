@@ -157,6 +157,7 @@ const FieldItem = ({
             <option value="date">Date</option>
             <option value="time">Time</option>
             <option value="text box">Instruction Note</option>
+            <option value="href">External Link Button</option>
             <option value="image">Image Banner</option>
             <option value="file">File Upload</option>
           </select>
@@ -205,6 +206,17 @@ const FieldItem = ({
             className="border border-stone-200 dark:border-stone-800 rounded-xl p-3 w-full text-xs sm:text-sm bg-stone-50/50 dark:bg-stone-900/40 text-stone-700 dark:text-stone-300 focus:outline-none focus:border-orange-400"
           />
         )}
+
+        {field.type === "href" && (
+          <input
+            type="url"
+            value={field.content || ""}
+            onChange={(e) => updateField({ ...field, content: e.target.value })}
+            placeholder="Paste URL (e.g. https://...)"
+            className="border border-stone-200 dark:border-stone-800 rounded-xl p-2.5 w-full text-xs sm:text-sm bg-transparent text-stone-800 dark:text-stone-200 focus:outline-none focus:border-orange-400"
+          />
+        )}
+
         {field.type === "image" && (
           <div className="flex flex-col gap-2">
             <input
@@ -263,7 +275,7 @@ const FieldItem = ({
         </div>
 
         <div className="flex items-center gap-4">
-          {!["text box", "image"].includes(field.type) && (
+          {!["text box", "image", "href"].includes(field.type) && (
             <label className="flex items-center gap-2 cursor-pointer select-none">
               <input
                 type="checkbox"
